@@ -1,10 +1,12 @@
+import { Route, Routes } from "react-router-dom";
+import { HomePage } from "./pages/HomePage";
+import { DetailPage } from "./pages/DetailPage";
 
-
-export default function App (){
+export default function App() {
   return (
-    <h1 className='text-4xl font-bold text-red-500 p-8'>
-      Tailwind Funcionando
-    </h1>
-  )
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/:type/:id" element={<DetailPage />} />
+    </Routes>
+  );
 }
-
