@@ -49,15 +49,20 @@ function normalizeSummary(
   };
 }
 
-export async function getTrending(): Promise<TitleSummary[]> {
-  const res = await fetch(`${BASE_URL}/trending/all/day`, { headers });
-
-  if (!res.ok) throw new Error("No se pudo cargar tendencias.");
+export async function getTrending(
+  page: number = 1,
+): Promise<{ results: TitleSummary[]; totalPages: number }> {
+  const res = await fetch(`${BASE_URL}/trending/all/day?page=${page}`, {
+    headers,
+  });
+  if (!res.ok) throw new Error("No se pudo cargar tendencias");
   const data = await res.json();
 
-  return data.results
+  const results = data.results
     .filter((r: any) => r.media_type === "movie" || r.media_type === "tv")
     .map((r: TMDBMovieRaw | TMDBTVRaw) => normalizeSummary(r));
+
+  return { results, totalPages: data.total_pages };
 }
 
 export async function searchTitles(
@@ -77,7 +82,7 @@ export async function searchTitles(
   return { results, totalPages: data.total_pages };
 }
 
-export async function getTitleDetailt(
+export async function getTitleDetail(
   type: MediaType,
   id: string,
 ): Promise<TitleDetail> {
